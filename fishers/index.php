@@ -1,14 +1,20 @@
 <?php
+//How the file handles errors
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
+//UserSpice Required
 require_once '../../users/init.php'; //make sure this path is correct!
 if (!securePage($_SERVER['PHP_SELF']))
 {
     die();
 }
-$logged_in = $user->data();
+
+$logged_in = $user->data(); //This isn't actually referenced anywhere but I'm afraid to remove it. ~ Rix
+
+//Set IP tracking. This is done like four times so I guess we'll know if it fails?
 $ip = 'Unable To Log';
+//Known good CloudFlare IPs
 $cloudflareIPRanges = array(
     '204.93.240.0/24',
     '204.93.177.0/24',
@@ -71,43 +77,54 @@ else
 //reference it throughout the app.
 define('IP_ADDRESS', $ip);
 
-//$lgd_ip='notLogged';
+//$lgd_ip='notLogged'; I don't know why this is commented out and at this point I'm too afraid to ask. ~ Rix
 $lgd_ip = $ip;
+//Connection Information
 $db = include 'db.php';
+
+//This ensures we get good error messages.
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+
 $mysqli = new mysqli($db['server'], $db['user'], $db['pass'], $db['db'], $db['port']);
+
+//Get the list of all possible Platforms from centralized Lookup Table.
 $platformList = [];
 $res = $mysqli->query('SELECT * FROM lookups.platform_lu ORDER BY platform_id');
 while ($burgerking = $res->fetch_assoc())
 {
     $platformList[$burgerking['platform_id']] = $burgerking['platform_name'];
 }
+//This is named burgerking because I needed a unique variable other than 'data' and I was hungry.
+//TODO: Change this. ~ Rixxan
 
+//Get the list of all possible case statuses from centralized Lookup Table.
 $statusList = [];
 $res = $mysqli->query('SELECT * FROM lookups.status_lu ORDER BY status_id');
 while ($casestat2 = $res->fetch_assoc())
 {
   if ($casestat2['status_name'] == 'Open') {
     continue;
-  }
+  }//We don't need to file paperwork on open cases, right now.
   if ($casestat2['status_name'] == 'On Hold') {
     continue;
   }
     $statusList[$casestat2['status_id']] = $casestat2['status_name'];
 }
 
+//Type of Case. For KFs, only take KF cases (8-11)
 $typeList = [];
 $res = $mysqli->query('SELECT * FROM lookups.case_color_lu WHERE color_id IN (8, 9 , 10, 11) ORDER BY color_name');
 while ($trow = $res->fetch_assoc()) {
     $typeList[$trow['color_id']] = $trow['color_name'];
 }
 
+//The good stuff. What happens when we hit submit.
 $validationErrors = [];
 $data = [];
 if (isset($_GET['send'])) {
     foreach ($_REQUEST as $key => $value) {
         $data[$key] = strip_tags(stripslashes(str_replace(["'", '"'], '', $value)));
-    }
+    } //ensure the data passes first-level validation. We'll do more in the DB.
 	    if (strlen($data['client_nm']) > 45) {
         $validationErrors[] = 'commander name too long';
     }
