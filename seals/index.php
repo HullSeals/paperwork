@@ -132,7 +132,7 @@ if (isset($_GET['send']))
       <section class="introduction container">
     <article id="intro3">
       <h1>Seal Case Paperwork</h1>
-      <h5>Complete for Drill Cases Only. Do NOT complete for Seal repairs.</h5>
+      <h5>Only complete paperwork for cases below 95%. Do not report self-repairs.</h5>
       <hr>
       <?php if (count($validationErrors)) {foreach ($validationErrors as $error) {echo '<div class="alert alert-danger">' . $error . '</div>';}echo '<br>';}?>
       <form action="?send" method="post">
