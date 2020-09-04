@@ -7,7 +7,7 @@ $curruser45 = $user->data()->id;
 $db = include 'db.php';
 $mysqli = new mysqli($db['server'], $db['user'], $db['pass'], "sealsudb", $db['port']);
 	$sql = "SELECT seal_name, seal_id FROM staff
-			WHERE (seal_name LIKE '%".$_GET['query']."%') AND (seal_id NOT IN (0,'$curruser45'))
+			WHERE (seal_name LIKE '%".$_GET['query']."%') AND (seal_id NOT IN (0,'$curruser45')) AND del_flag <> 1
       ORDER BY seal_name ASC
 			LIMIT 10";
 
