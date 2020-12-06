@@ -113,7 +113,7 @@ if (isset($_GET['send']))
         $whpayload = array(
           "client" => $whclient,
           "seal" => $whseal,
-        )
+        );
         $postdata = json_encode($whpayload);
 
         $ch = curl_init($url);
@@ -124,7 +124,7 @@ if (isset($_GET['send']))
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
         $result = curl_exec($ch);
         curl_close($ch);
-        
+
         header("Location: success.php");
     }
 }

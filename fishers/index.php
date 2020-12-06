@@ -121,7 +121,7 @@ if (isset($_GET['send'])) {
         $whpayload = array(
           "client" => $whclient,
           "seal" => $whseal,
-        )
+        );
         $postdata = json_encode($whpayload);
 
         $ch = curl_init($url);
