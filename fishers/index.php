@@ -228,7 +228,11 @@ if (isset($_GET['send'])) {
                           <input aria-label="other_seals" type="text" id="other_seals" name="other_seals" placeholder="Other Fishers on the Case? (If None, Leave Blank)" class="form-control" value="<?= $data['other_seals'] ?? '' ?>">
                         </div>
               					<div class="input-group mb-3">
-                          <textarea aria-label="Notes (optional)" class="form-control" name="notes" placeholder="Notes (optional)" rows="4"><?= $data['notes'] ?? '' ?>
+                          <textarea aria-label="Notes (Required)" minlength="10" class="form-control" name="notes" placeholder="Notes (Required).
+                          Suggested notes include:
+                          - Distance Traveled
+                          - Unique or Unusual details about the rescue
+                          - Every Kingfisher case is unique - your notes should be too!" rows="5"><?= $data['notes'] ?? '' ?>
 </textarea>
                         </div>
 
