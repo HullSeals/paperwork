@@ -69,6 +69,10 @@ if (isset($_GET['send']))
     {
         $validationErrors[] = 'invalid IP Address';
     }
+    if ($data['dispatched'] = 1 && !isset($data['dispatcher']))
+    {
+      $validationErrors[] = 'Please include the Dispatcher!';
+    }
     if (!count($validationErrors))
     {
         $stmt = $mysqli->prepare('CALL spTempCreateHSCaseCleaner(?,?,?,?,?,?,?,?,?,?,@caseID)');
