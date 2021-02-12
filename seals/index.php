@@ -199,7 +199,7 @@ if (isset($_GET['send']))
           <input aria-label="other_seals" class="form-control" id="other_seals" name="other_seals" placeholder="Other Seals on the Case? (If None, Leave Blank)" type="text" value="<?= $data['other_seals'] ?? '' ?>">
         </div>
         <div class="input-group mb-3">
-          <textarea aria-label="Notes (Required)" minlength="10" class="form-control" name="notes" placeholder="Notes (Required).
+          <textarea aria-label="Notes (Required)" required minlength="10" class="form-control" name="notes" placeholder="Notes (Required).
           Suggested notes include:
           - Distance Traveled
           - Unique or Unusual details about the repair
