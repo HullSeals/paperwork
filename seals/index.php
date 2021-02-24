@@ -69,7 +69,7 @@ if (isset($_GET['send']))
     {
         $validationErrors[] = 'invalid IP Address';
     }
-    if ($data['dispatched'] = 1 && !isset($data['dispatcher']))
+    if ($data['dispatched'] == 1 && !isset($data['dispatcher']))
     {
       $validationErrors[] = 'Please include the Dispatcher!';
     }
@@ -190,7 +190,7 @@ if (isset($_GET['send']))
           </select>
         </div>
         <div class="input-group mb-3">
-          <label class="input-group-text text-primary" id="dispatched"><input aria-label="Self Dispatched?" name="dispatched" type="checkbox" value="1" data-toggle="toggle" data-on="Self-Dispatched" data-off="Dispatched Case" data-onstyle="danger" data-offstyle="success"></label>
+          <label class="input-group-text text-primary"><input aria-label="Self Dispatched?" name="dispatched" type="checkbox" value="1" data-toggle="toggle" data-on="Self-Dispatched" data-off="Dispatched Case" data-onstyle="danger" data-offstyle="success"></label>
         </div>
         <div class="input-group mb-3">
           <input aria-label="Who was Dispatching?" class="form-control" id="dispatcher" name="dispatcher" placeholder="Who was Dispatching? (If None, Leave Blank)" type="text" value="<?= $data['dispatcher'] ?? '' ?>">

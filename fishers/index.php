@@ -77,7 +77,7 @@ if (isset($_GET['send'])) {
     if (!isset($platformList[$data['platypus']])) {
         $validationErrors[] = 'invalid platform';
     }
-    if ($data['dispatched'] = 1 && !isset($data['dispatcher']))
+    if ($data['dispatched'] == 1 && !isset($data['dispatcher']))
     {
       $validationErrors[] = 'Please include the Dispatcher!';
     }
