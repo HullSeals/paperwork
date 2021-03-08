@@ -69,7 +69,12 @@ if (isset($_GET['send'])) {
 	if (!isset($statusList[$data['case_stat']])) {
         $validationErrors[] = 'invalid status';
     }
+    if (isset($data['dispatched'])) {
     $data['dispatched'] = isset($data['dispatched']);
+    }
+      else {
+  	    $data['dispatched']=0;
+      }
 
     if (!isset($lgd_ip)) {
         $validationErrors[] = 'invalid IP Address';
@@ -77,8 +82,7 @@ if (isset($_GET['send'])) {
     if (!isset($platformList[$data['platypus']])) {
         $validationErrors[] = 'invalid platform';
     }
-    if ($data['dispatched'] == 1 && !isset($data['dispatcher']))
-    {
+    if ($data['dispatched'] == 0 && (!isset($data['dispatcher']) || empty($data['dispatcher'])))    {
       $validationErrors[] = 'Please include the Dispatcher!';
     }
     if (!count($validationErrors))

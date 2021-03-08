@@ -56,7 +56,12 @@ if (isset($_GET['send']))
         $validationErrors[] = 'invalid hull';
     }
     $data['cb'] = isset($data['cb']);
+    if (isset($data['dispatched'])) {
     $data['dispatched'] = isset($data['dispatched']);
+    }
+    else {
+	    $data['dispatched']=0;
+    }
     if (!isset($platformList[$data['platypus']]))
     {
         $validationErrors[] = 'invalid platform';
@@ -69,7 +74,7 @@ if (isset($_GET['send']))
     {
         $validationErrors[] = 'invalid IP Address';
     }
-    if ($data['dispatched'] == 1 && !isset($data['dispatcher']))
+    if ($data['dispatched'] == 0 && (!isset($data['dispatcher']) || empty($data['dispatcher'])))
     {
       $validationErrors[] = 'Please include the Dispatcher!';
     }
@@ -109,8 +114,7 @@ if (isset($_GET['send']))
             $stmt3->bind_param('isii', $extractArray, $osNM, $thenumber1, $thenumber2);
             $stmt3->execute();
             $stmt3->close();
-        }
-
+	}
         $whseal = echousername($user->data()->id);
         $whclient = $data['client_nm'];
         $url = 'http://halpybot.hullseals.space:3141/ppwk';
