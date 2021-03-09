@@ -139,7 +139,48 @@ if (isset($_GET['send'])) {
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
         $result = curl_exec($ch);
         curl_close($ch);
+        $webhookurl = "";
+            $timestamp = date("c", strtotime("now"));
+              $json_data = json_encode([
+                  "content" => "Paperwork Completed",
+                  "username" => "HalpyBOT",
+                  "avatar_url" => "https://hullseals.space/images/emblem_mid.png",
+                  "tts" => false,
+                  "embeds" => [
+                      [
+                          "title" => "Paperwork Complete",
+                          "type" => "rich",
+                          "timestamp" => $timestamp,
+                          "color" => hexdec( "F5921F" ),
+                          "footer" => [
+                              "text" => "Hull Seals Case Notification System",
+                              "icon_url" => "https://hullseals.space/images/emblem_mid.png"
+                          ],
+                          "fields" => [
+                              [
+                                  "name" => "Paperwork for case",
+                                  "value" => $whclient,
+                                  "inline" => true
+                              ],
+                              [
+                                  "name" => "Completed by ",
+                                  "value" => $whseal,
+                                  "inline" => true
+                              ]
+                          ]
+                      ]
+                  ]
 
+              ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
+        $ch = curl_init( $webhookurl );
+        curl_setopt( $ch, CURLOPT_HTTPHEADER, array('Content-type: application/json'));
+        curl_setopt( $ch, CURLOPT_POST, 1);
+        curl_setopt( $ch, CURLOPT_POSTFIELDS, $json_data);
+        curl_setopt( $ch, CURLOPT_FOLLOWLOCATION, 1);
+        curl_setopt( $ch, CURLOPT_HEADER, 0);
+        curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1);
+        $response = curl_exec( $ch );
+        curl_close( $ch );
         header("Location: success.php");    }
 }
 ?>
