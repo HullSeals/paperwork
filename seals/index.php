@@ -31,6 +31,10 @@ if ($casestat2['status_name'] == 'On Hold') {
   continue;
 }
 
+if ($casestat2['status_name'] == 'Delete Case') {
+  continue;
+}
+
     $statusList[$casestat2['status_id']] = $casestat2['status_name'];
 }
 
