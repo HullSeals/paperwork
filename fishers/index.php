@@ -43,6 +43,12 @@ while ($casestat2 = $res->fetch_assoc())
     $statusList[$casestat2['status_id']] = $casestat2['status_name'];
 }
 
+$stmt3 = $mysqli->prepare("SELECT COUNT(seal_name) AS num_cmdrs FROM sealsudb.staff WHERE seal_ID = ? AND del_flag != True");
+$stmt3->bind_param("i", $user->data()->id);
+$stmt3->execute();
+$resultnum = $stmt3->get_result();
+$resultnum = $resultnum->fetch_assoc();
+
 //Type of Case. For KFs, only take KF cases (8-11)
 $typeList = [];
 $res = $mysqli->query('SELECT * FROM lookups.case_color_lu WHERE color_id IN (8, 9 , 10, 11) ORDER BY color_name');
@@ -209,16 +215,13 @@ if (isset($_GET['send'])) {
      <section class="introduction container">
    <article id="intro3">
               				<h1>Kingfisher Case Paperwork</h1>
-              				<h5>Complete for cases below 95%. Do NOT complete for Self Repairs.</h5>
+              				<h5>Do NOT complete for Self Repairs.</h5>
               				<hr>
-              				<?php
-                                  if (count($validationErrors)) {
-                                      foreach ($validationErrors as $error) {
-                                          echo '<div class="alert alert-danger">' . $error . '</div>';
-                                      }
-                                      echo '<br>';
-                                  }
-                                  ?>
+                      <?php if (count($validationErrors)) {foreach ($validationErrors as $error) {echo '<div class="alert alert-danger">' . $error . '</div>';}echo '<br>';}
+                            if ($resultnum['num_cmdrs'] === 0) { ?>
+                              <div class="alert alert-danger" role = "alert"><h2> You cannot file paperwork without a valid CMDR registered.</h2><a href="https://hullseals.space/cmdr-management/" class="alert-link" target="_blank">Click Here</a> to set one, then refresh the page. </div>
+                            <?php }
+                            else { ?>
               				<form action="?send" method="post">
                         <div class="input-group mb-3">
                         						<p>Your ID has been logged as <?php echo echousername($user->data()->id); ?>. This will be entered as the Lead Fisher.</p><p>Do not enter yourself as either a Dispatcher or another Fisher.</p>
@@ -290,6 +293,7 @@ if (isset($_GET['send'])) {
 
                         <button type="submit" class="btn btn-primary">Submit</button>
                     </form>
+                    <?php } ?>
                   </article>
                   <div class="clearfix"></div>
               </section>

@@ -18,11 +18,13 @@ if (!securePage($_SERVER['PHP_SELF'])){die();}
         <section class="introduction container">
 	    <article id="intro3">
         <h1>Case Paperwork</h1>
-        <p>To continue, please select your paperwork type.</p>
+        <p>SEAL ONLY: To continue, please select your paperwork type.</p>
         <div class="btn-group" style="display:flex;" role="group">
           <a href="seals" class="btn btn-lg btn-primary">Seals</a>
           <a href="fishers" class="btn btn-lg btn-info">Kingfishers</a>
       </div>
+      <br>
+      <p>Please do not fill out paperwork if you were the client.</p>
       </article>
             <div class="clearfix"></div>
         </section>
