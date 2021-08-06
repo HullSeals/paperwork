@@ -204,6 +204,7 @@ if (isset($_GET['send']))
           Suggested notes include:
           - Distance Traveled
           - Unique or Unusual details about the repair
+          - A Case Screenshot Link (Let an Admin know if you want it considered for Twitter!)
           - Number of Limpets used, Client Ship Type, or other details." rows="5"><?= $data['notes'] ?? '' ?>
 </textarea>
         </div><button class="btn btn-primary" type="submit">Submit</button>

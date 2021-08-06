@@ -228,6 +228,7 @@ if (isset($_GET['send'])) {
                           Suggested notes include:
                           - Distance Traveled
                           - Unique or Unusual details about the rescue
+                          - A Case Screenshot Link (Let an Admin know if you want it considered for Twitter!)
                           - Every Kingfisher case is unique - your notes should be too!" rows="5"><?= $data['notes'] ?? '' ?>
 </textarea>
                         </div>
