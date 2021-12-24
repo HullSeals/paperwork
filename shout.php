@@ -1,11 +1,10 @@
-<?
+<?php
 //Authenticaton Info
-$auth = require 'auth.php';
-$secret = $auth['auth'];
+$auth = require_once 'auth.php';
 $key = $auth['key'];
+$constant = $auth['constant'];
 $webhookurl = $auth['discord'];
 $url = $auth['url'];
-$auth = hash_hmac('sha256', $key, $secret);
 //Content
 $whseal = echousername($user->data()->id);
 $whclient = $data['client_nm'];
@@ -18,18 +17,21 @@ $data = [
   ]
 ];
 $postdata = json_encode($data);
+$hmacdata = preg_replace("/\s+/", "", $postdata);
+$auth = hash_hmac('sha256', $hmacdata, $key);
+$keyCheck = hash_hmac('sha256', $constant, $key);
 $ch = curl_init($url);
 curl_setopt($ch, CURLOPT_POST, 1);
 curl_setopt($ch, CURLOPT_POSTFIELDS, $postdata);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
 curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-    'Content-Type: application/json',
-	'hmac: '. $auth
+	'Content-Type: application/json',
+	'hmac: '. $auth,
+	'keyCheck: '. $keyCheck
 ));
 $result = curl_exec($ch);
 curl_close($ch);
-
 //Discord Webhook
     $timestamp = date("c", strtotime("now"));
       $json_data = json_encode([
