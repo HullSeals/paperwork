@@ -76,7 +76,7 @@ if (isset($_GET['send'])) {
     if (strlen($data['curr_sys']) > 100) {
         $validationErrors[] = 'system too long';
     }
-	    if (strlen($data['curr_planet']) > 10) {
+	    if (strlen($data['curr_planet']) > 40) {
         $validationErrors[] = 'planet too long';
     }
     if (strlen($data['curr_coord']) > 20) {
