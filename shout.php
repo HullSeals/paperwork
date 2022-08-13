@@ -8,12 +8,14 @@ $url = $auth['url'];
 //Content
 $whseal = echousername($user->data()->id);
 $whclient = $data['client_nm'];
+$whcaseid = $extractArray;
 // IRC Message
 $data = [
 	"type" => "PPWK",
 	"parameters" => [
 		"CMDR" => $whclient,
-		"Seal" => $whseal
+		"Seal" => $whseal,
+		"Number" => $whcaseid
   ]
 ];
 $postdata = json_encode($data);
@@ -50,7 +52,7 @@ curl_close($ch);
                       "icon_url" => "https://hullseals.space/images/emblem_mid.png"
                   ],
                   "fields" => [
-                      [
+											[
                           "name" => "Paperwork for case",
                           "value" => $whclient,
                           "inline" => true
@@ -59,7 +61,12 @@ curl_close($ch);
                           "name" => "Completed by ",
                           "value" => $whseal,
                           "inline" => true
-                      ]
+                      ],
+											[
+													"name" => "Case ID",
+													"value" => $whcaseid,
+													"inline" => true
+											]
                   ]
               ]
           ]
