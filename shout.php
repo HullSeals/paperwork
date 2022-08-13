@@ -61,13 +61,12 @@ curl_close($ch);
                           "name" => "Completed by ",
                           "value" => $whseal,
                           "inline" => true
-                      ],
-											[
-													"name" => "Case ID",
-													"value" => $whcaseid,
-													"inline" => true
-											]
-                  ]
+ 										 ],
+										 [
+												  "name" => "Case ID",
+												  "value" => $whcaseid,
+												  "inline" => true
+										 ]                  ]
               ]
           ]
 
