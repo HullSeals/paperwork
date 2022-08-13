@@ -66,7 +66,8 @@ curl_close($ch);
 												  "name" => "Case ID",
 												  "value" => $whcaseid,
 												  "inline" => true
-										 ]                  ]
+										 ]
+                  ]
               ]
           ]
 
