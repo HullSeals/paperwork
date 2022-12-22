@@ -55,21 +55,23 @@ $stmt3->execute();
 $resultnum = $stmt3->get_result();
 $resultnum = $resultnum->fetch_assoc();
 
-$validationErrors = [];
+$validationErrors = 0;
 $data = [];
 if (isset($_GET['send'])) {
   foreach ($_REQUEST as $key => $value) {
     $data[$key] = strip_tags(stripslashes(str_replace(["'", '"'], '', $value)));
   }
   if (strlen($data['client_nm']) > 45) {
-    $validationErrors[] = 'commander name too long';
+    sessionValMessages("CMDR name too long. Please try again.");
+    $validationErrors += 1;
   }
   if (strlen($data['curr_sys']) > 100) {
-    $validationErrors[] = 'system too long';
+    sessionValMessages("System name too long. Please try again.");
+    $validationErrors += 1;
   }
-  $data['hull'] = (int)$data['hull'];
   if ($data['hull'] > 100 || $data['hull'] < 1) {
-    $validationErrors[] = 'invalid hull';
+    sessionValMessages("Error! Invalid hull set! Please try again.");
+    $validationErrors += 1;
   }
   $data['cb'] = isset($data['cb']);
   if (isset($data['dispatched'])) {
@@ -78,24 +80,25 @@ if (isset($_GET['send'])) {
     $data['dispatched'] = 0;
   }
   if (!isset($platformList[$data['platypus']])) {
-    $validationErrors[] = 'invalid platform';
+    sessionValMessages("Error! No platform set! Please try again.");
+    $validationErrors += 1;
   }
   if (!isset($statusList[$data['case_stat']])) {
-    $validationErrors[] = 'invalid status';
+    sessionValMessages("Error! No case status set! Please try again.");
+    $validationErrors += 1;
   }
   if (!isset($lgd_ip)) {
-    $validationErrors[] = 'invalid IP Address';
+    sessionValMessages("Error! Unable to log IP Address! Please contact the Cyberseals.");
+    $validationErrors += 1;
   }
   if ($data['dispatched'] == 0 && (!isset($data['dispatcher']) || empty($data['dispatcher']))) {
-    $validationErrors[] = 'Please include the Dispatcher!';
+    sessionValMessages("Please set the Dispatchers and try again.");
+    $validationErrors += 1;
   }
-  if (!count($validationErrors)) {
+  if ($validationErrors == 0) {
     $stmt = $mysqli->prepare('CALL spTempCreateHSCaseCleaner(?,?,?,?,?,?,?,?,?,?,@caseID)');
     $stmt->bind_param('ssiiiiisis', $data['client_nm'], $data['curr_sys'], $data['hull'], $data['cb'], $data['platypus'], $data['case_stat'], $data['dispatched'], $data['notes'], $user->data()->id, $lgd_ip);
     $stmt->execute();
-    foreach ($stmt->error_list as $error) {
-      $validationErrors[] = 'DB: ' . $error['error'];
-    }
     $result = mysqli_stmt_get_result($stmt);
     while ($row = mysqli_fetch_array($result, MYSQLI_NUM)) {
       foreach ($row as $r) {
@@ -128,12 +131,7 @@ if (isset($_GET['send'])) {
 <h1>Seal Case Paperwork</h1>
 <h5>Only complete paperwork for cases below 95%. Do not report self-repairs.</h5>
 <hr>
-<?php if (count($validationErrors)) {
-  foreach ($validationErrors as $error) {
-    echo '<div class="alert alert-danger">' . $error . '</div>';
-  }
-  echo '<br>';
-}
+<?php
 if ($resultnum['num_cmdrs'] === 0) { ?>
   <div class="alert alert-danger" role="alert">
     <h2> You cannot file paperwork without a valid CMDR registered.</h2><a href="https://hullseals.space/cmdr-management/" class="alert-link" target="_blank">Click Here</a> to set one, then refresh the page.
@@ -145,13 +143,13 @@ if ($resultnum['num_cmdrs'] === 0) { ?>
       <p>Do not enter yourself as either a Dispatcher or another Seal.</p>
     </div>
     <div class="input-group mb-3">
-      <input class="form-control" name="client_nm" placeholder="Client Name" required="" type="text" value="<?= $data['client_nm'] ?? '' ?>">
+      <input class="form-control" name="client_nm" pattern="[\x20-\x7A]+" minlength="3" placeholder="Client Name" title="The Client name in standard characters" required type="text" value="<?= $data['client_nm'] ?? '' ?>">
     </div>
     <div class="input-group mb-3">
-      <input class="form-control" name="curr_sys" placeholder="System" required="" type="text" value="<?= $data['curr_sys'] ?? '' ?>">
+      <input class="form-control" name="curr_sys" pattern="[\x20-\x7A]+" minlength="3" placeholder="System" title="The System name in standard characters" required type="text" value="<?= $data['curr_sys'] ?? '' ?>">
     </div>
     <div class="input-group mb-3">
-      <input class="form-control" max="100" min="1" name="hull" placeholder="Starting Hull %" required="" type="number" value="<?= $data['hull'] ?? '' ?>">
+      <input class="form-control" max="100" min="0" pattern="[0-9]" name="hull" placeholder="Starting Hull %" required type="number" value="<?= $data['hull'] ?? '' ?>">
     </div>
     <div class="input-group mb-3">
       <label class="input-group-text text-primary"><input name="cb" type="checkbox" value="1" data-toggle="toggle" data-on="Canopy Breached" data-off="Canopy Not Breached" data-onstyle="danger" data-offstyle="success"> </label>
@@ -159,18 +157,18 @@ if ($resultnum['num_cmdrs'] === 0) { ?>
     <div class="input-group mb-3">
       <div class="input-group-prepend">
         <span class="input-group-text">Platform</span>
-      </div><select class="custom-select" id="inputGroupSelect01" name="platypus" required="">
+      </div><select class="custom-select" id="inputGroupSelect01" name="platypus" required>
         <?php foreach ($platformList as $platformId => $platformName) {
-          echo '<option value="' . $platformId . '"' . '>' . $platformName . '</option>';
+          echo '<option value="' . $platformId . '">' . $platformName . '</option>';
         } ?>
       </select>
     </div>
     <div class="input-group mb-3">
       <div class="input-group-prepend">
         <span class="input-group-text">Was the Case Successful?</span>
-      </div><select class="custom-select" id="inputGroupSelect01" name="case_stat" required="">
+      </div><select class="custom-select" id="inputGroupSelect01" name="case_stat" required>
         <?php foreach ($statusList as $statusId => $statusName) {
-          echo '<option value="' . $statusId . '"' . '>' . $statusName . '</option>';
+          echo '<option value="' . $statusId . '">' . $statusName . '</option>';
         } ?>
       </select>
     </div>
@@ -184,7 +182,7 @@ if ($resultnum['num_cmdrs'] === 0) { ?>
       <input class="form-control" id="other_seals" name="other_seals" placeholder="Other Seals on the Case? (If None, Leave Blank)" type="text" value="<?= $data['other_seals'] ?? '' ?>">
     </div>
     <div class="input-group mb-3">
-      <textarea required minlength="10" class="form-control" name="notes" placeholder="Notes (Required).
+      <textarea required minlength="10" pattern="[\x20-\x7F]+" class="form-control" name="notes" placeholder="Notes (Required).
           Suggested notes include:
           - Distance Traveled
           - Unique or Unusual details about the repair

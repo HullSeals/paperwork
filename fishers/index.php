@@ -63,49 +63,53 @@ while ($trow = $res->fetch_assoc()) {
 }
 
 //The good stuff. What happens when we hit submit.
-$validationErrors = [];
+$validationErrors = 0;
 $data = [];
 if (isset($_GET['send'])) {
   foreach ($_REQUEST as $key => $value) {
     $data[$key] = strip_tags(stripslashes(str_replace(["'", '"'], '', $value)));
   } //ensure the data passes first-level validation. We'll do more in the DB.
   if (strlen($data['client_nm']) > 45) {
-    $validationErrors[] = 'commander name too long';
+    sessionValMessages("CMDR name too long. Please try again.");
+    $validationErrors += 1;
   }
   if (strlen($data['curr_sys']) > 100) {
-    $validationErrors[] = 'system too long';
+    sessionValMessages("System name too long. Please try again.");
+    $validationErrors += 1;
   }
-  if (strlen($data['curr_planet']) > 40) {
-    $validationErrors[] = 'planet too long';
+  if (strlen($data['curr_planet']) > 10) {
+    sessionValMessages("Planet name too long. Please try again.");
+    $validationErrors += 1;
   }
   if (strlen($data['curr_coord']) > 20) {
-    $validationErrors[] = 'coordinates too long';
+    sessionValMessages("Coordiantes too long. Please try again.");
+    $validationErrors += 1;
   }
   if (!isset($statusList[$data['case_stat']])) {
-    $validationErrors[] = 'invalid status';
+    sessionValMessages("Error! No case status set! Please try again.");
+    $validationErrors += 1;
   }
   if (isset($data['dispatched'])) {
     $data['dispatched'] = isset($data['dispatched']);
   } else {
     $data['dispatched'] = 0;
   }
-
   if (!isset($lgd_ip)) {
-    $validationErrors[] = 'invalid IP Address';
+    sessionValMessages("Error! Unable to log IP Address! Please contact the Cyberseals.");
+    $validationErrors += 1;
   }
   if (!isset($platformList[$data['platypus']])) {
-    $validationErrors[] = 'invalid platform';
+    sessionValMessages("Error! No platform set! Please try again.");
+    $validationErrors += 1;
   }
   if ($data['dispatched'] == 0 && (!isset($data['dispatcher']) || empty($data['dispatcher']))) {
-    $validationErrors[] = 'Please include the Dispatcher!';
+    sessionValMessages("Please set the Dispatchers and try again.");
+    $validationErrors += 1;
   }
-  if (!count($validationErrors)) {
+  if ($validationErrors == 0) {
     $stmt = $mysqli->prepare('CALL spTempCreateKFCaseCleaner(?,?,?,?,?,?,?,?,?,?,?,@caseID)');
     $stmt->bind_param('ssssiiiisis', $data['client_nm'], $data['curr_sys'], $data['curr_planet'], $data['curr_coord'], $data['platypus'], $data['case_stat'], $data['case_type'], $data['dispatched'], $data['notes'], $user->data()->id, $lgd_ip);
     $stmt->execute();
-    foreach ($stmt->error_list as $error) {
-      $validationErrors[] = 'DB: ' . $error['error'];
-    }
     $result = mysqli_stmt_get_result($stmt);
     while ($row = mysqli_fetch_array($result, MYSQLI_NUM)) {
       foreach ($row as $r) {
@@ -138,12 +142,7 @@ if (isset($_GET['send'])) {
 <h1>Kingfisher Case Paperwork</h1>
 <h5>Do NOT complete for Self Repairs.</h5>
 <hr>
-<?php if (count($validationErrors)) {
-  foreach ($validationErrors as $error) {
-    echo '<div class="alert alert-danger">' . $error . '</div>';
-  }
-  echo '<br>';
-}
+<?php
 if ($resultnum['num_cmdrs'] === 0) { ?>
   <div class="alert alert-danger" role="alert">
     <h2> You cannot file paperwork without a valid CMDR registered.</h2><a href="https://hullseals.space/cmdr-management/" class="alert-link" target="_blank">Click Here</a> to set one, then refresh the page.
@@ -155,24 +154,24 @@ if ($resultnum['num_cmdrs'] === 0) { ?>
       <p>Do not enter yourself as either a Dispatcher or another Fisher.</p>
     </div>
     <div class="input-group mb-3">
-      <input type="text" name="client_nm" value="<?= $data['client_nm'] ?? '' ?>" class="form-control" placeholder="Client Name" required>
+      <input type="text" name="cmdr_name" pattern="[\x20-\x7A]+" minlength="3" value="<?= $data['cmdr_name'] ?? '' ?>" class="form-control" placeholder="Commander Name" title="Your CMDR name in standard characters." required>
     </div>
     <div class="input-group mb-3">
-      <input type="text" name="curr_sys" value="<?= $data['curr_sys'] ?? '' ?>" class="form-control" placeholder="System" required>
+      <input type="text" name="curr_sys" pattern="[\x20-\x7A]+" minlength="3" value="<?= $data['curr_sys'] ?? '' ?>" class="form-control" placeholder="System" title="The System name in standard characters" required>
     </div>
     <div class="input-group mb-3">
-      <input type="text" name="curr_planet" value="<?= $data['curr_planet'] ?? '' ?>" class="form-control" placeholder="Planet" required>
+      <input type="text" name="curr_planet" pattern="[\x20-\x7A]+" minlength="1" value="<?= $data['curr_planet'] ?? '' ?>" class="form-control" placeholder="Planet (ex, '3', 'A', '3 A 2', etc.)" required>
     </div>
     <div class="input-group mb-3">
-      <input type="text" name="curr_coord" value="<?= $data['curr_coord'] ?? '' ?>" class="form-control" placeholder="Coordinates (+/-000.000, +/-000.000)" pattern="(\+?|-)\d{1,3}\.\d{3}\,(\+?|-)\d{1,3}\.\d{3}" required>
+      <input type="text" name="curr_coord" value="<?= $data['curr_coord'] ?? '' ?>" class="form-control" placeholder="Coordinates (+/-000.000, +/-000.000)" pattern="(\+?|-)\d{1,3}\.\d{3}\,(\+?|-)\d{1,3}\.\d{3}" title="+/-000.000, +/-000.000" required>
     </div>
     <div class="input-group mb-3">
       <div class="input-group-prepend">
         <span class="input-group-text">Platform</span>
-      </div><select class="custom-select" id="inputGroupSelect01" name="platypus" required="">
+      </div><select class="custom-select" id="inputGroupSelect01" name="platypus" required>
         <?php
         foreach ($platformList as $platformId => $platformName) {
-          echo '<option value="' . $platformId . '"' . '>' . $platformName . '</option>';
+          echo '<option value="' . $platformId . '">' . $platformName . '</option>';
         }
         ?>
       </select>
@@ -180,10 +179,10 @@ if ($resultnum['num_cmdrs'] === 0) { ?>
     <div class="input-group mb-3">
       <div class="input-group-prepend">
         <span class="input-group-text">Was the Case Successful?</span>
-      </div><select class="custom-select" id="inputGroupSelect01" name="case_stat" required="">
+      </div><select class="custom-select" id="inputGroupSelect01" name="case_stat" required>
         <?php
         foreach ($statusList as $statusId => $statusName) {
-          echo '<option value="' . $statusId . '"' . '>' . $statusName . '</option>';
+          echo '<option value="' . $statusId . '">' . $statusName . '</option>';
         }
         ?>
       </select>
@@ -195,7 +194,7 @@ if ($resultnum['num_cmdrs'] === 0) { ?>
       <select name="case_type" class="custom-select" id="inputGroupSelect01" placeholder="Test" required>
         <?php
         foreach ($typeList as $typeId => $typeName) {
-          echo '<option value="' . $typeId . '"' . ($trow['case_type'] == $typeId ? ' checked' : '') . '>' . $typeName . '</option>';
+          echo '<option value="' . $typeId . '">' . $typeName . '</option>';
         }
         ?>
       </select>
