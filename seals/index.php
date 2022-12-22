@@ -145,23 +145,23 @@ if ($resultnum['num_cmdrs'] === 0) { ?>
       <p>Do not enter yourself as either a Dispatcher or another Seal.</p>
     </div>
     <div class="input-group mb-3">
-      <input aria-label="Client Name" class="form-control" name="client_nm" placeholder="Client Name" required="" type="text" value="<?= $data['client_nm'] ?? '' ?>">
+      <input class="form-control" name="client_nm" placeholder="Client Name" required="" type="text" value="<?= $data['client_nm'] ?? '' ?>">
     </div>
     <div class="input-group mb-3">
-      <input aria-label="System" class="form-control" name="curr_sys" placeholder="System" required="" type="text" value="<?= $data['curr_sys'] ?? '' ?>">
+      <input class="form-control" name="curr_sys" placeholder="System" required="" type="text" value="<?= $data['curr_sys'] ?? '' ?>">
     </div>
     <div class="input-group mb-3">
-      <input aria-label="Starting Hull %" class="form-control" max="100" min="1" name="hull" placeholder="Starting Hull %" required="" type="number" value="<?= $data['hull'] ?? '' ?>">
+      <input class="form-control" max="100" min="1" name="hull" placeholder="Starting Hull %" required="" type="number" value="<?= $data['hull'] ?? '' ?>">
     </div>
     <div class="input-group mb-3">
-      <label class="input-group-text text-primary"><input aria-label="Canopy Breached?" name="cb" type="checkbox" value="1" data-toggle="toggle" data-on="Canopy Breached" data-off="Canopy Not Breached" data-onstyle="danger" data-offstyle="success"> </label>
+      <label class="input-group-text text-primary"><input name="cb" type="checkbox" value="1" data-toggle="toggle" data-on="Canopy Breached" data-off="Canopy Not Breached" data-onstyle="danger" data-offstyle="success"> </label>
     </div>
     <div class="input-group mb-3">
       <div class="input-group-prepend">
         <span class="input-group-text">Platform</span>
       </div><select class="custom-select" id="inputGroupSelect01" name="platypus" required="">
         <?php foreach ($platformList as $platformId => $platformName) {
-          echo '<option value="' . $platformId . '"' . ($platformInfo['platypus'] == $platformId ? ' checked' : '') . '>' . $platformName . '</option>';
+          echo '<option value="' . $platformId . '"' . '>' . $platformName . '</option>';
         } ?>
       </select>
     </div>
@@ -170,21 +170,21 @@ if ($resultnum['num_cmdrs'] === 0) { ?>
         <span class="input-group-text">Was the Case Successful?</span>
       </div><select class="custom-select" id="inputGroupSelect01" name="case_stat" required="">
         <?php foreach ($statusList as $statusId => $statusName) {
-          echo '<option value="' . $statusId . '"' . ($casestat2['case_stat'] == $statusId ? ' checked' : '') . '>' . $statusName . '</option>';
+          echo '<option value="' . $statusId . '"' . '>' . $statusName . '</option>';
         } ?>
       </select>
     </div>
     <div class="input-group mb-3">
-      <label class="input-group-text text-primary"><input aria-label="Self Dispatched?" name="dispatched" type="checkbox" value="1" data-toggle="toggle" data-on="Self-Dispatched" data-off="Dispatched Case" data-onstyle="danger" data-offstyle="success"></label>
+      <label class="input-group-text text-primary"><input name="dispatched" type="checkbox" value="1" data-toggle="toggle" data-on="Self-Dispatched" data-off="Dispatched Case" data-onstyle="danger" data-offstyle="success"></label>
     </div>
     <div class="input-group mb-3">
-      <input aria-label="Who was Dispatching?" class="form-control" id="dispatcher" name="dispatcher" placeholder="Who was Dispatching? (If None, Leave Blank)" type="text" value="<?= $data['dispatcher'] ?? '' ?>">
+      <input class="form-control" id="dispatcher" name="dispatcher" placeholder="Who was Dispatching? (If None, Leave Blank)" type="text" value="<?= $data['dispatcher'] ?? '' ?>">
     </div>
     <div class="input-group mb-3">
-      <input aria-label="other_seals" class="form-control" id="other_seals" name="other_seals" placeholder="Other Seals on the Case? (If None, Leave Blank)" type="text" value="<?= $data['other_seals'] ?? '' ?>">
+      <input class="form-control" id="other_seals" name="other_seals" placeholder="Other Seals on the Case? (If None, Leave Blank)" type="text" value="<?= $data['other_seals'] ?? '' ?>">
     </div>
     <div class="input-group mb-3">
-      <textarea aria-label="Notes (Required)" required minlength="10" class="form-control" name="notes" placeholder="Notes (Required).
+      <textarea required minlength="10" class="form-control" name="notes" placeholder="Notes (Required).
           Suggested notes include:
           - Distance Traveled
           - Unique or Unusual details about the repair

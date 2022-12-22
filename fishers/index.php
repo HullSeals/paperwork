@@ -155,16 +155,16 @@ if ($resultnum['num_cmdrs'] === 0) { ?>
       <p>Do not enter yourself as either a Dispatcher or another Fisher.</p>
     </div>
     <div class="input-group mb-3">
-      <input type="text" name="client_nm" value="<?= $data['client_nm'] ?? '' ?>" class="form-control" placeholder="Client Name" aria-label="Client Name" required>
+      <input type="text" name="client_nm" value="<?= $data['client_nm'] ?? '' ?>" class="form-control" placeholder="Client Name" required>
     </div>
     <div class="input-group mb-3">
-      <input type="text" name="curr_sys" value="<?= $data['curr_sys'] ?? '' ?>" class="form-control" placeholder="System" aria-label="System" required>
+      <input type="text" name="curr_sys" value="<?= $data['curr_sys'] ?? '' ?>" class="form-control" placeholder="System" required>
     </div>
     <div class="input-group mb-3">
-      <input type="text" name="curr_planet" value="<?= $data['curr_planet'] ?? '' ?>" class="form-control" placeholder="Planet" aria-label="Planet" required>
+      <input type="text" name="curr_planet" value="<?= $data['curr_planet'] ?? '' ?>" class="form-control" placeholder="Planet" required>
     </div>
     <div class="input-group mb-3">
-      <input type="text" name="curr_coord" value="<?= $data['curr_coord'] ?? '' ?>" class="form-control" placeholder="Coordinates (+/-000.000, +/-000.000)" aria-label="Coordinates" pattern="(\+?|-)\d{1,3}\.\d{3}\,(\+?|-)\d{1,3}\.\d{3}" required>
+      <input type="text" name="curr_coord" value="<?= $data['curr_coord'] ?? '' ?>" class="form-control" placeholder="Coordinates (+/-000.000, +/-000.000)" pattern="(\+?|-)\d{1,3}\.\d{3}\,(\+?|-)\d{1,3}\.\d{3}" required>
     </div>
     <div class="input-group mb-3">
       <div class="input-group-prepend">
@@ -172,7 +172,7 @@ if ($resultnum['num_cmdrs'] === 0) { ?>
       </div><select class="custom-select" id="inputGroupSelect01" name="platypus" required="">
         <?php
         foreach ($platformList as $platformId => $platformName) {
-          echo '<option value="' . $platformId . '"' . ($platformInfo['platypus'] == $platformId ? ' checked' : '') . '>' . $platformName . '</option>';
+          echo '<option value="' . $platformId . '"' . '>' . $platformName . '</option>';
         }
         ?>
       </select>
@@ -183,7 +183,7 @@ if ($resultnum['num_cmdrs'] === 0) { ?>
       </div><select class="custom-select" id="inputGroupSelect01" name="case_stat" required="">
         <?php
         foreach ($statusList as $statusId => $statusName) {
-          echo '<option value="' . $statusId . '"' . ($casestat2['case_stat'] == $statusId ? ' checked' : '') . '>' . $statusName . '</option>';
+          echo '<option value="' . $statusId . '"' . '>' . $statusName . '</option>';
         }
         ?>
       </select>
@@ -201,16 +201,16 @@ if ($resultnum['num_cmdrs'] === 0) { ?>
       </select>
     </div>
     <div class="input-group mb-3">
-      <label class="input-group-text text-primary" id="dispatched"><input aria-label="Self Dispatched?" name="dispatched" type="checkbox" value="1" data-toggle="toggle" data-on="Self-Dispatched" data-off="Dispatched Case" data-onstyle="danger" data-offstyle="success"></label>
+      <label class="input-group-text text-primary" id="dispatched"><input name="dispatched" type="checkbox" value="1" data-toggle="toggle" data-on="Self-Dispatched" data-off="Dispatched Case" data-onstyle="danger" data-offstyle="success"></label>
     </div>
     <div class="input-group mb-3">
-      <input type="text" name="dispatcher" id="dispatcher" value="<?= $data['dispatcher'] ?? '' ?>" class="form-control" placeholder="Who was Dispatching? (If None, Leave Blank)" aria-label="Who was Dispatching?">
+      <input type="text" name="dispatcher" id="dispatcher" value="<?= $data['dispatcher'] ?? '' ?>" class="form-control" placeholder="Who was Dispatching? (If None, Leave Blank)">
     </div>
     <div class="input-group mb-3">
-      <input aria-label="other_seals" type="text" id="other_seals" name="other_seals" placeholder="Other Fishers on the Case? (If None, Leave Blank)" class="form-control" value="<?= $data['other_seals'] ?? '' ?>">
+      <input type="text" id="other_seals" name="other_seals" placeholder="Other Fishers on the Case? (If None, Leave Blank)" class="form-control" value="<?= $data['other_seals'] ?? '' ?>">
     </div>
     <div class="input-group mb-3">
-      <textarea aria-label="Notes (Required)" required minlength="10" class="form-control" name="notes" placeholder="Notes (Required).
+      <textarea required minlength="10" class="form-control" name="notes" placeholder="Notes (Required).
                           Suggested notes include:
                           - Distance Traveled
                           - Unique or Unusual details about the rescue
