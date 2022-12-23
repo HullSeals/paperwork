@@ -124,7 +124,7 @@ if (isset($_GET['send'])) {
       $stmt3->close();
     }
     require_once '../shout.php';
-    header("Location: success.php");
+    header("Location: ../?type=seal&id=" . $whcaseid);
   }
 }
 ?>

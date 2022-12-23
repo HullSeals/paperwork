@@ -16,6 +16,28 @@ if (!securePage($_SERVER['PHP_SELF'])) {
 }
 ?>
 <h1>Case Paperwork</h1>
+<?php
+if (isset($_GET['id'])) {
+  sessionValMessages(
+    "",
+    "Paperwork successfully filed for case " . $_GET['id'],
+  );
+}
+if (isset($_GET['type']) && $_GET['type'] == "seal") { ?>
+  <div class="alert alert-success" role="alert">
+    <h5>Thank you for submitting your paperwork, Seal! You may now close the tab.</h5>
+  </div>
+  <hr>
+  <p>Need to submit another case?</p>
+<?php } elseif (isset($_GET['type']) && $_GET['type'] == "fisher") { ?>
+  <div class="alert alert-success" role="alert">
+    <h5>Thank you for submitting your paperwork, Fisher! You may now close the tab.</h5>
+  </div>
+  <hr>
+  <p>Need to submit another case?</p>
+<?php
+}
+?>
 <p>SEAL ONLY: To continue, please select your paperwork type.</p>
 <div class="btn-group" style="display:flex;" role="group">
   <a href="seals" class="btn btn-lg btn-primary">Seals</a>
