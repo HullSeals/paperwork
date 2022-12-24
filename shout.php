@@ -1,4 +1,8 @@
 <?php
+if (count(get_included_files()) == 1) {
+    http_response_code(403);
+    exit("Direct access not permitted.");
+}
 //Authenticaton Info
 $auth = require_once 'auth.php';
 $key = $auth['key'];

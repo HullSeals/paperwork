@@ -15,7 +15,8 @@ $customContent = '<link rel="stylesheet" type="text/css" href="https://cdnjs.clo
  <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
  <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
  <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js" integrity="sha384-Q9RsZ4GMzjlu4FFkJw4No9Hvvm958HqHmXI9nqo5Np2dA/uOVBvKVxAvlBQrDhk4" crossorigin="anonymous"></script>';
-//UserSpice Required
+
+ //UserSpice Required
 require_once '../../users/init.php';  //make sure this path is correct!
 require_once $abs_us_root . $us_url_root . 'users/includes/template/prep.php';
 if (!securePage($_SERVER['PHP_SELF'])) {
@@ -70,23 +71,23 @@ if (isset($_GET['send'])) {
     $data[$key] = strip_tags(stripslashes(str_replace(["'", '"'], '', $value)));
   } //ensure the data passes first-level validation. We'll do more in the DB.
   if (strlen($data['client_nm']) > 45) {
-    sessionValMessages("CMDR name too long. Please try again.");
+    usError("CMDR name too long. Please try again.");
     $validationErrors += 1;
   }
   if (strlen($data['curr_sys']) > 100) {
-    sessionValMessages("System name too long. Please try again.");
+    usError("System name too long. Please try again.");
     $validationErrors += 1;
   }
   if (strlen($data['curr_planet']) > 10) {
-    sessionValMessages("Planet name too long. Please try again.");
+    usError("Planet name too long. Please try again.");
     $validationErrors += 1;
   }
   if (strlen($data['curr_coord']) > 20) {
-    sessionValMessages("Coordiantes too long. Please try again.");
+    usError("Coordiantes too long. Please try again.");
     $validationErrors += 1;
   }
   if (!isset($statusList[$data['case_stat']])) {
-    sessionValMessages("Error! No case status set! Please try again.");
+    usError("Error! No case status set! Please try again.");
     $validationErrors += 1;
   }
   if (isset($data['dispatched'])) {
@@ -95,15 +96,15 @@ if (isset($_GET['send'])) {
     $data['dispatched'] = 0;
   }
   if (!isset($lgd_ip)) {
-    sessionValMessages("Error! Unable to log IP Address! Please contact the Cyberseals.");
+    usError("Error! Unable to log IP Address! Please contact the Cyberseals.");
     $validationErrors += 1;
   }
   if (!isset($platformList[$data['platypus']])) {
-    sessionValMessages("Error! No platform set! Please try again.");
+    usError("Error! No platform set! Please try again.");
     $validationErrors += 1;
   }
   if ($data['dispatched'] == 0 && (!isset($data['dispatcher']) || empty($data['dispatcher']))) {
-    sessionValMessages("Please set the Dispatchers and try again.");
+    usError("Please set the Dispatchers and try again.");
     $validationErrors += 1;
   }
   if ($validationErrors == 0) {
@@ -136,6 +137,7 @@ if (isset($_GET['send'])) {
     }
     require_once '../shout.php';
     header("Location: ../?type=fisher&id=" . $whcaseid);
+    die();
   }
 }
 ?>
@@ -150,7 +152,7 @@ if ($resultnum['num_cmdrs'] === 0) { ?>
 <?php } else { ?>
   <form action="?send" method="post">
     <div class="input-group mb-3">
-      <p>Your ID has been logged as <?php echo echousername($user->data()->id); ?>. This will be entered as the Lead Fisher.</p>
+      <p>Your ID has been logged as <?= echousername($user->data()->id); ?>. This will be entered as the Lead Fisher.</p>
       <p>Do not enter yourself as either a Dispatcher or another Fisher.</p>
     </div>
     <div class="input-group mb-3">
@@ -217,8 +219,6 @@ if ($resultnum['num_cmdrs'] === 0) { ?>
                           - Every Kingfisher case is unique - your notes should be too!" rows="5"><?= $data['notes'] ?? '' ?>
 </textarea>
     </div>
-
-
     <button type="submit" class="btn btn-primary">Submit</button>
   </form>
 <?php } ?>

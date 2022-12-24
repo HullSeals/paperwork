@@ -18,10 +18,7 @@ if (!securePage($_SERVER['PHP_SELF'])) {
 <h1>Case Paperwork</h1>
 <?php
 if (isset($_GET['id'])) {
-  sessionValMessages(
-    "",
-    "Paperwork successfully filed for case " . $_GET['id'],
-  );
+  usSuccess("Paperwork successfully filed for case " . $_GET['id']);
 }
 if (isset($_GET['type']) && $_GET['type'] == "seal") { ?>
   <div class="alert alert-success" role="alert">
