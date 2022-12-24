@@ -62,15 +62,15 @@ if (isset($_GET['send'])) {
     $data[$key] = strip_tags(stripslashes(str_replace(["'", '"'], '', $value)));
   }
   if (strlen($data['client_nm']) > 45) {
-    sessionValMessages("CMDR name too long. Please try again.");
+    usError("CMDR name too long. Please try again.");
     $validationErrors += 1;
   }
   if (strlen($data['curr_sys']) > 100) {
-    sessionValMessages("System name too long. Please try again.");
+    usError("System name too long. Please try again.");
     $validationErrors += 1;
   }
   if ($data['hull'] > 100 || $data['hull'] < 1) {
-    sessionValMessages("Error! Invalid hull set! Please try again.");
+    usError("Error! Invalid hull set! Please try again.");
     $validationErrors += 1;
   }
   $data['cb'] = isset($data['cb']);
@@ -80,19 +80,19 @@ if (isset($_GET['send'])) {
     $data['dispatched'] = 0;
   }
   if (!isset($platformList[$data['platypus']])) {
-    sessionValMessages("Error! No platform set! Please try again.");
+    usError("Error! No platform set! Please try again.");
     $validationErrors += 1;
   }
   if (!isset($statusList[$data['case_stat']])) {
-    sessionValMessages("Error! No case status set! Please try again.");
+    usError("Error! No case status set! Please try again.");
     $validationErrors += 1;
   }
   if (!isset($lgd_ip)) {
-    sessionValMessages("Error! Unable to log IP Address! Please contact the Cyberseals.");
+    usError("Error! Unable to log IP Address! Please contact the Cyberseals.");
     $validationErrors += 1;
   }
   if ($data['dispatched'] == 0 && (!isset($data['dispatcher']) || empty($data['dispatcher']))) {
-    sessionValMessages("Please set the Dispatchers and try again.");
+    usError("Please set the Dispatchers and try again.");
     $validationErrors += 1;
   }
   if ($validationErrors == 0) {
@@ -125,6 +125,7 @@ if (isset($_GET['send'])) {
     }
     require_once '../shout.php';
     header("Location: ../?type=seal&id=" . $whcaseid);
+    die();
   }
 }
 ?>
@@ -139,7 +140,7 @@ if ($resultnum['num_cmdrs'] === 0) { ?>
 <?php } else { ?>
   <form action="?send" method="post">
     <div class="input-group mb-3">
-      <p>Your ID has been logged as <?php echo echousername($user->data()->id); ?>. This will be entered as the Lead Seal.</p>
+      <p>Your ID has been logged as <?= echousername($user->data()->id); ?>. This will be entered as the Lead Seal.</p>
       <p>Do not enter yourself as either a Dispatcher or another Seal.</p>
     </div>
     <div class="input-group mb-3">
