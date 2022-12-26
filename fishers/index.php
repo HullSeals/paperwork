@@ -16,7 +16,7 @@ $customContent = '<link rel="stylesheet" type="text/css" href="https://cdnjs.clo
  <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
  <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js" integrity="sha384-Q9RsZ4GMzjlu4FFkJw4No9Hvvm958HqHmXI9nqo5Np2dA/uOVBvKVxAvlBQrDhk4" crossorigin="anonymous"></script>';
 
- //UserSpice Required
+//UserSpice Required
 require_once '../../users/init.php';  //make sure this path is correct!
 require_once $abs_us_root . $us_url_root . 'users/includes/template/prep.php';
 if (!securePage($_SERVER['PHP_SELF'])) {
@@ -38,13 +38,7 @@ while ($platformInfo = $res->fetch_assoc()) {
 $statusList = [];
 $res = $mysqli->query('SELECT * FROM lookups.status_lu ORDER BY status_id');
 while ($casestat2 = $res->fetch_assoc()) {
-  if ($casestat2['status_name'] == 'Open') {
-    continue;
-  } //We don't need to file paperwork on open cases, right now.
-  if ($casestat2['status_name'] == 'On Hold') {
-    continue;
-  }
-  if ($casestat2['status_name'] == 'Delete Case') {
+  if ($casestat2['status_name'] == 'Open' || $casestat2['status_name'] == 'On Hold' || $casestat2['status_name'] == 'Delete Case') {
     continue;
   }
   $statusList[$casestat2['status_id']] = $casestat2['status_name'];
@@ -90,11 +84,7 @@ if (isset($_GET['send'])) {
     usError("Error! No case status set! Please try again.");
     $validationErrors += 1;
   }
-  if (isset($data['dispatched'])) {
-    $data['dispatched'] = isset($data['dispatched']);
-  } else {
-    $data['dispatched'] = 0;
-  }
+  isset($data['dispatched']) ? $data['dispatched'] = isset($data['dispatched']) : $data['dispatched'] = 0;
   if (!isset($lgd_ip)) {
     usError("Error! Unable to log IP Address! Please contact the Cyberseals.");
     $validationErrors += 1;
