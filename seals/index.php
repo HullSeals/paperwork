@@ -36,16 +36,9 @@ while ($platformInfo = $res->fetch_assoc()) {
 $statusList = [];
 $res = $mysqli->query('SELECT * FROM lookups.status_lu ORDER BY status_id');
 while ($casestat2 = $res->fetch_assoc()) {
-  if ($casestat2['status_name'] == 'Open') {
+  if ($casestat2['status_name'] == 'Open' || $casestat2['status_name'] == 'On Hold' || $casestat2['status_name'] == 'Delete Case') {
     continue;
   }
-  if ($casestat2['status_name'] == 'On Hold') {
-    continue;
-  }
-  if ($casestat2['status_name'] == 'Delete Case') {
-    continue;
-  }
-
   $statusList[$casestat2['status_id']] = $casestat2['status_name'];
 }
 
@@ -69,16 +62,12 @@ if (isset($_GET['send'])) {
     usError("System name too long. Please try again.");
     $validationErrors += 1;
   }
-  if ($data['hull'] > 100 || $data['hull'] < 1) {
+  if ($data['hull'] > 100 || $data['hull'] < 0) {
     usError("Error! Invalid hull set! Please try again.");
     $validationErrors += 1;
   }
   $data['cb'] = isset($data['cb']);
-  if (isset($data['dispatched'])) {
-    $data['dispatched'] = isset($data['dispatched']);
-  } else {
-    $data['dispatched'] = 0;
-  }
+  isset($data['dispatched']) ? $data['dispatched'] = isset($data['dispatched']) : $data['dispatched'] = 0;
   if (!isset($platformList[$data['platypus']])) {
     usError("Error! No platform set! Please try again.");
     $validationErrors += 1;
