@@ -146,7 +146,7 @@ if ($resultnum['num_cmdrs'] === 0) { ?>
       <p>Do not enter yourself as either a Dispatcher or another Fisher.</p>
     </div>
     <div class="input-group mb-3">
-      <input type="text" name="cmdr_name" pattern="[\x20-\x7A]+" minlength="3" value="<?= $data['cmdr_name'] ?? '' ?>" class="form-control" placeholder="Commander Name" title="Your CMDR name in standard characters." required>
+      <input type="text" name="cmdr_name" pattern="[\x20-\x7A]+" minlength="3" value="<?= $data['client_nm'] ?? '' ?>" class="form-control" placeholder="Commander Name" title="Your CMDR name in standard characters." required>
     </div>
     <div class="input-group mb-3">
       <input type="text" name="curr_sys" pattern="[\x20-\x7A]+" minlength="3" value="<?= $data['curr_sys'] ?? '' ?>" class="form-control" placeholder="System" title="The System name in standard characters" required>
